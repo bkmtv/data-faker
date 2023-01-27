@@ -1,11 +1,11 @@
 import './App.css';
+import { useState, useEffect } from 'react';
 import { faker } from "@faker-js/faker";
-import InfiniteScroll from 'react-infinite-scroll-component';
 
 function App() {
   faker.setLocale("ru");
 
-  let listOfUsers = [];
+  const [listOfUsers, setListOfUsers] = useState([]);
 
   function createUser() {
     return {
@@ -16,28 +16,22 @@ function App() {
     }
   }
 
-  Array.from({ length: 10 }).forEach(() => {
-    listOfUsers.push(createUser());
-  });
-
-  const fetchUsers = () => {
-    console.log("fetchUsers");
-    listOfUsers.push(
-      Array.from({ length: 10 }).forEach(() => {
-        listOfUsers.push(createUser());
-      })
+  useEffect(() => {
+    setListOfUsers(
+      Array.from({ length: 10 }, (e => createUser()))
     )
-  };
+  }, [setListOfUsers]);
+
+  function refresh() {
+    setListOfUsers(
+      Array.from({ length: 10 }, (e => createUser()))
+    )
+  }
 
   return (
     <div className="App">
-      <h3>Случайные данные</h3>
-      
-      <InfiniteScroll
-        dataLength={listOfUsers.length}
-        next={fetchUsers}
-        hasMore={true}
-      >
+      <h2>Fake Users</h2>
+      <button onClick={refresh}>Refresh</button>
         {listOfUsers.map((el, key) => {
           return (
             <div key={key} className="card">
@@ -45,12 +39,11 @@ function App() {
               <p>ID: {el.uuid}</p>
               <p>Full Name: {el.fullName}</p>
               <p>Address: {el.address}</p>
-              <p>Phone: {el.phone}</p>
+              <p>Phone: {"+7" + el.phone}</p>
             </div>
             )
           })
         }
-      </InfiniteScroll>
     </div>
   );
 }

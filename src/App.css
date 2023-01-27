@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  color: #fff;
 }
 
 .card {
@@ -9,4 +10,18 @@
   padding: 10px 30px;
   border: 1px solid #ccc;
   border-radius: 10px;
+}
+
+.App button {
+  background-color: green;
+  color: #fff;
+  font-size: 16px;
+  border-style: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.App button:hover {
+  background-color: rgb(53, 132, 53);
 }
