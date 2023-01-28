@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { faker } from "@faker-js/faker";
 
 function App() {
-  faker.setLocale("ru");
-
+  faker.setLocale("en");
   const [listOfUsers, setListOfUsers] = useState([]);
 
   function createUser() {
@@ -15,18 +14,32 @@ function App() {
       phone:faker.phone.number(),
     }
   }
-
-  useEffect(() => {
-    setListOfUsers(
-      Array.from({ length: 10 }, (e => createUser()))
-    )
-  }, [setListOfUsers]);
+  const newUsers = [];
+  Array.from({ length: 10 }).forEach(() => {
+    newUsers.push(createUser());
+  });
 
   function refresh() {
-    setListOfUsers(
-      Array.from({ length: 10 }, (e => createUser()))
-    )
+    setListOfUsers([...newUsers]);
   }
+
+  useEffect(() => {
+    setListOfUsers(newUsers);
+  }, []);
+
+  const scrollHandler = (e) => {
+      if ((e.target.documentElement.scrollHeight - e.target.documentElement.scrollTop - window.innerHeight) < 100) {
+        setListOfUsers([...newUsers, ...newUsers]);
+      }
+    }
+
+  useEffect(() => {
+    document.addEventListener("scroll", scrollHandler);
+    return () => {
+      document.removeEventListener("scroll", scrollHandler);
+    }
+  }, []);
+
 
   return (
     <div className="App">
@@ -39,13 +52,13 @@ function App() {
               <p>ID: {el.uuid}</p>
               <p>Full Name: {el.fullName}</p>
               <p>Address: {el.address}</p>
-              <p>Phone: {"+7" + el.phone}</p>
+              <p>Phone: {el.phone}</p>
             </div>
             )
           })
         }
     </div>
-  );
+  )
 }
 
 export default App;
